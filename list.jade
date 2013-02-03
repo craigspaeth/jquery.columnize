@@ -1,0 +1,76 @@
+doctype 5
+html
+  head
+    :stylus
+      @import '/node_modules/nib'
+      global-reset()
+      font-family Georgia
+      .column
+        float left
+        width 170px
+        margin-right 40px
+      li
+        display inline-block
+        width 170px
+        
+        margin 0 40px 40px 0
+        position relative
+        img
+          max-width 100%
+        .caption
+          margin 10px 0
+          font-size 14px
+        .container
+          display inline-block
+          vertical-align top
+          top 0
+  body
+    ul#container
+  
+  #scripts
+    script( src='http://code.jquery.com/jquery-1.9.0.min.js' )
+    :coffeescript
+      
+      window.countRows = ($lis) ->
+        top = $lis.first().offset().top
+        ($lis.filter -> $(@).offset().top is top).length
+      
+      window.columnize = ($lis) ->
+        numRows = countRows($lis)
+        $uls = $ ('<ul></ul>' for i in [0...numRows]).join("")
+        addLisToColumns $lis, $uls
+        ('<ul class="column">' + $(ul).html() + '</ul>' for ul in $uls).join('')
+        
+      window.addLisToColumns = ($lis, $uls) ->
+        numRows = $uls.length
+        uls = ('' for i in [0...numRows])
+        $lis.each (i, el) -> 
+          uls[i % numRows] += '<li>' + $(el).html() + '</li>'
+        $($uls[i]).append(html) for html, i in uls
+        $uls
+        
+      window.createLis = ->
+        (for i in [0..20]
+          width = 200 + Math.round(Math.random() * 300)
+          height = 200 + Math.round(Math.random() * 300)
+          """
+            <li>
+              <div class='container'>
+                <img src='http://placekitten.com/#{width}/#{height}'>
+                <div class='caption'>
+                  Randall Exon
+                  <br>
+                  Silver bowl and Green Apple, 2012
+                </div>
+              </div>
+            </li>
+          """
+        ).join('')
+      
+      window.appendPage = ->
+        addLisToColumns $(createLis()), $('ul').children()
+      
+      $ ->
+        window.$ul = $('ul')
+        $ul.append(createLis())
+        $ul.html(columnize($ul.children()))

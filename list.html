@@ -1,0 +1,196 @@
+<!DOCTYPE html><html><head><style type="text/css">html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-family: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+body {
+  line-height: 1;
+  color: #000;
+  background: #fff;
+}
+ol,
+ul {
+  list-style: none;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  vertical-align: middle;
+}
+caption,
+th,
+td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+a img {
+  border: none;
+}
+font-family Georgia,
+.column {
+  float: left;
+  width: 170px;
+  margin-right: 40px;
+}
+li {
+  display: inline-block;
+  width: 170px;
+  margin: 0 40px 40px 0;
+  position: relative;
+}
+li img {
+  max-width: 100%;
+}
+li .caption {
+  margin: 10px 0;
+  font-size: 14px;
+}
+li .container {
+  display: inline-block;
+  vertical-align: top;
+  top: 0;
+}
+</style></head><body><ul id="container"></ul></body><div id="scripts"><script src="http://code.jquery.com/jquery-1.9.0.min.js"></script><script type="text/javascript">
+(function() {
+
+  window.countRows = function($lis) {
+    var top;
+    top = $lis.first().offset().top;
+    return ($lis.filter(function() {
+      return $(this).offset().top === top;
+    })).length;
+  };
+
+  window.columnize = function($lis) {
+    var $uls, i, numRows, ul;
+    numRows = countRows($lis);
+    $uls = $(((function() {
+      var _i, _results;
+      _results = [];
+      for (i = _i = 0; 0 <= numRows ? _i < numRows : _i > numRows; i = 0 <= numRows ? ++_i : --_i) {
+        _results.push('<ul></ul>');
+      }
+      return _results;
+    })()).join(""));
+    addLisToColumns($lis, $uls);
+    return ((function() {
+      var _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = $uls.length; _i < _len; _i++) {
+        ul = $uls[_i];
+        _results.push('<ul class="column">' + $(ul).html() + '</ul>');
+      }
+      return _results;
+    })()).join('');
+  };
+
+  window.addLisToColumns = function($lis, $uls) {
+    var html, i, numRows, uls, _i, _len;
+    numRows = $uls.length;
+    uls = (function() {
+      var _i, _results;
+      _results = [];
+      for (i = _i = 0; 0 <= numRows ? _i < numRows : _i > numRows; i = 0 <= numRows ? ++_i : --_i) {
+        _results.push('');
+      }
+      return _results;
+    })();
+    $lis.each(function(i, el) {
+      return uls[i % numRows] += '<li>' + $(el).html() + '</li>';
+    });
+    for (i = _i = 0, _len = uls.length; _i < _len; i = ++_i) {
+      html = uls[i];
+      $($uls[i]).append(html);
+    }
+    return $uls;
+  };
+
+  window.createLis = function() {
+    var height, i, width;
+    return ((function() {
+      var _i, _results;
+      _results = [];
+      for (i = _i = 0; _i <= 20; i = ++_i) {
+        width = 200 + Math.round(Math.random() * 300);
+        height = 200 + Math.round(Math.random() * 300);
+        _results.push("<li>\n  <div class='container'>\n    <img src='http://placekitten.com/" + width + "/" + height + "'>\n    <div class='caption'>\n      Randall Exon\n      <br>\n      Silver bowl and Green Apple, 2012\n    </div>\n  </div>\n</li>");
+      }
+      return _results;
+    })()).join('');
+  };
+
+  window.appendPage = function() {
+    return addLisToColumns($(createLis()), $('ul').children());
+  };
+
+  $(function() {
+    window.$ul = $('ul');
+    $ul.append(createLis());
+    return $ul.html(columnize($ul.children()));
+  });
+
+}).call(this);
+</script></div></html>
